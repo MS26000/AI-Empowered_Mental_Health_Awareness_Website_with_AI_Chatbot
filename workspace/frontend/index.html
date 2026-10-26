@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Empowered Mental Health Awareness Website with AI Chatbot</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #de9494;
+      color: #333;
+    }
+
+    header {
+      background: #944141a1;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+      position: relative;
+    }
+
+    header h1 {
+      color: white;
+      font-size: 22px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #000;
+    }
+
+    .auth-links {
+      display: flex;
+      gap: 15px;
+    }
+
+    .hero {
+      height: 100vh;
+      background: url('images/frontpg.jpg') center/cover no-repeat;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .auth-card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 12px;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      margin-top: 50px;
+    }
+
+    .auth-card h2 {
+      margin-bottom: 20px;
+    }
+
+    .input-field {
+      margin-bottom: 15px;
+    }
+
+    .input-field input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .auth-card button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #944141a1;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    .auth-card button:hover {
+      background: rgb(188, 153, 221);
+    }
+  
+    #switch-link {
+      color: blue;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .alert {
+      font-size: 14px;
+      margin-top: 10px;
+      color: rgb(195, 56, 56);
+    }
+
+    .admin-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(228, 124, 72, 0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .admin-popup-content {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .admin-popup-content input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .admin-popup-content button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #eeede8;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .admin-popup-content button:hover {
+      background: #73a678;
+    }
+
+    .admin-popup-content .close-btn {
+      background: red;
+      color: #fff;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== Header/Navbar ===== -->
+  <header>
+    <h1>AI-Empowered Mental Health Awareness Website with AI Chatbot</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="mood.html">Mood Tracker</a></li>
+        <li><a href="chatbot.html">Chatbot</a></li>
+        <li><a href="quiz.html">Wellness Quiz</a></li>
+        <li><a href="therapist.html">Find Therapist</a></li>
+        <li><a href="testimonials.html">Testimonials</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="auth-links">
+      <a href="#" id="login-link" style="display:none;">Login</a>
+      <a href="#" id="signup-link" style="display:none;">Sign Up</a>
+      <a href="#" id="logout-link" style="display:none;">Logout</a>
+    </div>
+  </header>
+
+  <!-- ===== Hero Section ===== -->
+  <section class="hero">
+    <div class="hero-title" style="text-align:center; position:absolute; top:15%; width:100%;">
+      <h1 style="font-size:58px; color:#f5f4f8">Mental Heaven</h1>
+      <p style="font-size:18px; color:white">Your companion for better mental wellness and balance.</p>
+    </div>
+
+    <div class="auth-card">
+      <h2 id="auth-title">Login</h2>
+      <div class="input-field">
+        <input type="text" id="auth-email" placeholder="Enter your email">
+      </div>
+      <div class="input-field">
+        <input type="password" id="auth-password" placeholder="Enter your password">
+      </div>
+      <button id="auth-button">Login</button>
+      <button id="admin-button" style="background:#944141a1; color:#040404; margin-top:10px;">Admin Login</button>
+      <div class="alert" id="auth-alert"></div>
+      <p id="switch-text">Don't have an account? <span id="switch-link">Sign Up</span></p>
+    </div>
+  </section>
+
+  <!-- ===== Admin Popup ===== -->
+  <div class="admin-popup" id="adminPopup">
+    <div class="admin-popup-content">
+      <h3>Admin Login</h3>
+      <input type="text" id="admin-email" placeholder="Admin email">
+      <input type="password" id="admin-password" placeholder="Admin password">
+      <button id="admin-login-btn">Login</button>
+      <button class="close-btn" id="admin-close-btn">Close</button>
+      <div class="alert" id="admin-alert"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "http://127.0.0.1:8000";
+    let isLogin = true;
+
+    const authTitle = document.getElementById("auth-title");
+    const authButton = document.getElementById("auth-button");
+    const switchLink = document.getElementById("switch-link");
+    const switchText = document.getElementById("switch-text");
+    const authEmail = document.getElementById("auth-email");
+    const authPassword = document.getElementById("auth-password");
+    const authAlert = document.getElementById("auth-alert");
+
+    const loginLink = document.getElementById("login-link");
+    const signupLink = document.getElementById("signup-link");
+    const logoutLink = document.getElementById("logout-link");
+
+    // Switch login/signup
+    switchLink.onclick = () => {
+      isLogin = !isLogin;
+      if (isLogin) {
+        authTitle.textContent = "Login";
+        authButton.textContent = "Login";
+        switchText.innerHTML = `Don't have an account? <span id="switch-link">Sign Up</span>`;
+      } else {
+        authTitle.textContent = "Sign Up";
+        authButton.textContent = "Sign Up";
+        switchText.innerHTML = `Already have an account? <span id="switch-link">Login</span>`;
+      }
+      authAlert.textContent = "";
+      document.getElementById("switch-link").onclick = switchLink.onclick;
+    };
+
+    // Login/Signup action
+    authButton.onclick = async () => {
+      const email = authEmail.value.trim();
+      const password = authPassword.value.trim();
+      authAlert.textContent = "";
+
+      if (!email || !password) {
+        authAlert.style.color = "red";
+        authAlert.textContent = "Please enter all fields";
+        return;
+      }
+
+      try {
+        if (isLogin) {
+          const res = await fetch(`${API_URL}/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+            body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+          });
+          const data = await res.json();
+          if (res.ok) {
+            localStorage.setItem("user", JSON.stringify({ email, token: data.token }));
+            authAlert.style.color = "green";
+            authAlert.textContent = "Login successful!";
+            setTimeout(() => window.location.href = "about.html", 1000);
+          } else {
+            authAlert.style.color = "red";
+            authAlert.textContent = data.detail || "Login failed";
+          }
+        } else {
+          const res = await fetch(`${API_URL}/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+            body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+          });
+          const data = await res.json();
+          if (res.ok) {
+            localStorage.setItem("user", JSON.stringify({ email, token: data.token }));
+            authAlert.style.color = "green";
+            authAlert.textContent = "Signup successful, Start exploring now!";
+            setTimeout(() => window.location.href = "about.html", 1000);
+          } else {
+            authAlert.style.color = "red";
+            authAlert.textContent = data.detail || "Signup failed";
+          }
+        }
+      } catch (err) {
+        authAlert.style.color = "red";
+        authAlert.textContent = "Error connecting to server.";
+      }
+    };
+
+    // Navbar auth toggle
+    function toggleAuthLinks(isLoggedIn) {
+      loginLink.style.display = isLoggedIn ? "none" : "inline";
+      signupLink.style.display = isLoggedIn ? "none" : "inline";
+      logoutLink.style.display = isLoggedIn ? "inline" : "none";
+    }
+
+    logoutLink.onclick = () => {
+      localStorage.removeItem("user");
+      toggleAuthLinks(false);
+      window.location.href = "index.html";
+    };
+
+    window.onload = () => {
+      const user = localStorage.getItem("user");
+      toggleAuthLinks(!!user);
+
+      const protectedPages = ["about.html", "services.html", "therapist.html", "testimonials.html", "contact.html"];
+      document.querySelectorAll("nav a").forEach(link => {
+        const target = link.getAttribute("href");
+        if (protectedPages.includes(target)) {
+          link.addEventListener("click", function (e) {
+            if (!localStorage.getItem("user")) {
+              e.preventDefault();
+              alert("Please login/signup first!");
+            }
+          });
+        }
+      });
+    };
+
+    // ---- Admin popup ----
+    const adminButton = document.getElementById("admin-button");
+    const adminPopup = document.getElementById("adminPopup");
+    const adminCloseBtn = document.getElementById("admin-close-btn");
+    const adminLoginBtn = document.getElementById("admin-login-btn");
+    const adminEmail = document.getElementById("admin-email");
+    const adminPassword = document.getElementById("admin-password");
+    const adminAlert = document.getElementById("admin-alert");
+
+    adminButton.onclick = () => { adminPopup.style.display = "flex"; adminAlert.textContent = ""; };
+    adminCloseBtn.onclick = () => { adminPopup.style.display = "none"; adminEmail.value = ""; adminPassword.value = ""; };
+
+    adminLoginBtn.onclick = async () => {
+      const email = adminEmail.value.trim();
+      const password = adminPassword.value.trim();
+      adminAlert.textContent = "";
+      if (!email || !password) {
+        adminAlert.style.color = "red";
+        adminAlert.textContent = "Please enter email and password.";
+        return;
+      }
+      try {
+        const res = await fetch(`${API_URL}/admin/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ username: email, password: password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          adminAlert.style.color = "green";
+          adminAlert.textContent = "Admin login successful!";
+          localStorage.setItem("adminToken", data.token);
+          setTimeout(() => window.location.href = "admin.html", 1000);
+        } else {
+          adminAlert.style.color = "red";
+          adminAlert.textContent = data.detail || "Invalid admin credentials!";
+        }
+      } catch (e) {
+        adminAlert.style.color = "red";
+        adminAlert.textContent = "Error connecting to server.";
+      }
+    };
+  </script>
+</body>
+
+</html>

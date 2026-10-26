@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mental Health Awareness</title>
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('images/1.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #050d66;
+      line-height: 1.7;
+      scroll-behavior: smooth;
+    }
+
+    /* Overlay for readability */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(167, 177, 217, 0.15);
+      z-index: -1;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #052e5e, #378aa3);
+      color: #fefafa;
+      padding: 5px 6px 9px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      margin-top: 6px;
+    }
+
+    /* Navigation */
+    nav {
+      margin-top: 10px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #fff;
+      margin: 0 10px;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #ffe082;
+    }
+
+    /* Main Sections */
+    main {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    section {
+      margin-bottom: 70px;
+      padding: 25px;
+      background: #dadeee;
+      border-radius: 14px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+    }
+
+    section h2 {
+      color: #0a3361;
+      margin-bottom: 11px;
+      font-size: 3rem;
+      position: relative;
+      text-align: center;
+    }
+
+    section h2::after {
+      content: "";
+      display: block;
+      width: 70px;
+      height: 4px;
+      background: #addce9;
+      margin: 8px auto 0;
+      border-radius: 2px;
+    }
+
+    section img {
+      width: 60%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin: 15px auto;
+      display: block;
+    }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    /* Transparent cards */
+    .card {
+      background: rgba(4, 15, 113, 0.15); /* transparent background */
+      backdrop-filter: blur(6px); /* frosted glass effect */
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(5, 3, 136, 0.25);
+      padding: 15px;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #0c027b;
+    }
+
+    .quote {
+      background: #eaf4ff;
+      border-left: 6px solid #4a90e2;
+      padding: 15px;
+      margin: 25px 0;
+      font-style: italic;
+      border-radius: 8px;
+    }
+
+    .helplines {
+      background: #fff8e6;
+      border-left: 6px solid #f39c12;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 25px;
+    }
+
+    .helplines h3 {
+      margin-top: 0;
+      color: #e67e22;
+    }
+
+    footer {
+      background: #eaf4ff;
+      text-align: center;
+      padding: 20px;
+      font-weight: bold;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mental Health Awareness</h1>
+    <p>Understand • Care • Support</p>
+    <nav>
+      <a href="#what">What is Mental Health?</a>
+      <a href="#educate">Educate Yourself</a>
+      <a href="#care">Help Yourself</a>
+      <a href="#others">Help Others</a>
+      <a href="#helplines">Helplines</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- What is Mental Health -->
+    <section id="what">
+      <h2>What is Mental Health?</h2>
+      <img src="images/anxiety.jpg" alt="Mental health awareness">
+      <p>
+        Mental health refers to our emotional, psychological, and social well-being. 
+        It influences how we think, feel, and behave in daily life. 
+        Conditions such as stress, depression, and anxiety can affect mental health. 
+        Just like physical health, mental health is important at every stage of life.
+      </p>
+      <div class="quote">"Your mental health is just as important as your physical health."</div>
+    </section>
+
+    <!-- Educate Yourself -->
+    <section id="educate">
+      <h2>Educate Yourself</h2>
+      <div class="grid">
+        <div class="card">
+          <img src="images/center3.jpg" alt="Statistics">
+          <h3>Important Facts</h3>
+          <p>• 1 in 5 children have a mental disorder.<br>
+             • 264M suffer from depression globally.<br>
+             • Every 40 seconds one person dies by suicide.<br>
+             • Severe disorders reduce life expectancy by 10–20 years.</p>
+        </div>
+        <div class="card">
+          <img src="images/protest.jpg" alt="Global impact">
+          <h3>Global Challenges</h3>
+          <p>• Mental health workers &lt; 0.00002% in low-income countries.<br>
+             • $1T lost globally due to depression & anxiety yearly.<br>
+             • 40%+ of countries lack mental health policy.</p>
+        </div>
+        <div class="card">
+          <img src="images/community.jpg" alt="Awareness">
+          <h3>Promote Awareness</h3>
+          <p>Spreading knowledge reduces stigma and encourages people to seek help. 
+             Education is the first step to change.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Help Yourself -->
+    <section id="care">
+      <h2>Help Yourself</h2>
+      <div class="grid">
+        <div class="card">
+          <img src="images/self-love.jpg" alt="Healthy lifestyle">
+          <h3>Healthy Lifestyle</h3>
+          <p>Exercise, balanced diet, and proper sleep improve focus and boost happiness.</p>
+        </div>
+        <div class="card">
+          <img src="images/friends-talking.png" alt="Talk feelings">
+          <h3>Talk About Feelings</h3>
+          <p>Sharing with loved ones reduces stress. Talking is strength, not weakness.</p>
+        </div>
+        <div class="card">
+          <img src="images/group-therapy.jpg" alt="Ask for help">
+          <h3>Ask for Help</h3>
+          <p>Counselors, hotlines, or support groups can provide relief when overwhelmed.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Help Others -->
+    <section id="others">
+      <h2>Help Others</h2>
+      <div class="grid">
+        <div class="card">
+          <img src="images/family-care.jpg" alt="Listen support">
+          <h3>Listen & Support</h3>
+          <p>Be empathetic and supportive. Listening can bring great relief to someone in pain.</p>
+        </div>
+        <div class="card">
+          <img src="images/beach.jpg" alt="Conversation">
+          <h3>Start the Conversation</h3>
+          <p>Break the stigma by reaching out. Many people won’t speak unless encouraged.</p>
+        </div>
+        <div class="card">
+          <img src="images/kids-india.jpg" alt="Offer help">
+          <h3>Offer Practical Help</h3>
+          <p>Helping with daily chores or appointments shows care and builds trust.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Helplines -->
+    <section id="helplines" class="helplines">
+      <h3>🌍 Suicide Prevention & Mental Health Helplines</h3>
+      <p>If you or someone you know is struggling, please reach out to a trusted helpline:</p>
+      <ul>
+        <li>🇵🇰 Pakistan: Umang Pakistan – 0311 7786264 / 0311 77UMANG</li>
+        <li>🇺🇸 <b>USA:</b> National Suicide Prevention Lifeline – 1-800-273-8255</li>
+        <li>🌐 <b>Global:</b> <a href="http://www.befrienders.org" target="_blank">Befrienders Worldwide Directory</a></li>
+      </ul>
+    </section>
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+/* ===============================
+   MindMate - Unified Professional Styles
+   =============================== */
+
+/* General Reset & Fonts */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #f3f4f6; /* light background */
+  color: #111; /* text color for contrast */
+}
+
+
+/* ------------------------------
+   Headers & Navigation
+------------------------------ */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 16px;
+    background-color: #111827;
+    border-bottom: 2px solid #5aa6d6;
+    flex-wrap: wrap;
+}
+
+header h1 {
+    font-size: 28px;
+    color: #8b5cf6;
+}
+
+header nav a {
+    margin-left: 16px;
+    text-decoration: none;
+    color: #e5e7eb;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+header nav a:hover {
+    color: #22d3ee;
+}
+
+/* ------------------------------
+   Container & Panels
+------------------------------ */
+.container {
+    max-width: 1100px;
+    margin: 32px auto;
+    padding: 0 16px;
+}
+
+.panel {
+    background-color: #111827;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+h2 {
+    color: #22d3ee;
+    margin-bottom: 16px;
+}
+
+p {
+    color: #e5e7eb;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* ------------------------------
+   Buttons
+------------------------------ */
+.btn {
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(180deg, rgba(139,92,246,0.8), rgba(34,211,238,0.4));
+    color: #fff;
+    transition: transform 0.15s ease, background 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(180deg, rgba(34,211,238,0.8), rgba(139,92,246,0.6));
+}
+
+.btn.secondary {
+    background: transparent;
+    border: 2px solid #22d3ee;
+    color: #22d3ee;
+}
+
+.btn.ghost {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #94a3b8;
+}
+
+/* ------------------------------
+   Forms (Login / Signup / Journals)
+------------------------------ */
+input[type=text], input[type=email], input[type=password], textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background-color: #0f172a;
+    color: #e5e7eb;
+    font-size: 16px;
+}
+
+input[type=text]:focus, input[type=email]:focus, input[type=password]:focus, textarea:focus {
+    outline: none;
+    border-color: #22d3ee;
+}
+
+/* ------------------------------
+   Grids & Cards
+------------------------------ */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.videos iframe, .diet-card, .info-card {
+    border-radius: 12px;
+}
+
+.diet-card, .info-card {
+    background-color: #1e293b;
+    padding: 16px;
+}
+
+.diet-card h3 {
+    color: #f59e0b;
+    margin-bottom: 8px;
+}
+
+.info-card h3 {
+    color: #22d3ee;
+    margin-bottom: 8px;
+}
+
+.info-card img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+
+/* ------------------------------
+   Mood Tracker
+------------------------------ */
+.moods {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.moodbtn {
+    flex: 1 0 110px;
+    min-width: 110px;
+    background: #111827;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 12px;
+    cursor: pointer;
+    transition: transform .05s ease, border-color .15s ease;
+    text-align: left;
+}
+
+.moodbtn:hover {
+    transform: translateY(-1px);
+    border-color: #8b5cf6;
+}
+
+.moodbtn.active {
+    outline: 2px solid #8b5cf6;
+}
+
+.mood-emoji { font-size: 28px; line-height: 1; }
+.mood-title { font-weight: 700; margin-top: 8px; }
+.mood-sub { font-size: 12px; color: #94a3b8; }
+
+/* Entries */
+.list {
+    display: grid;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.entry {
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.02);
+    border-radius: 14px;
+    padding: 12px;
+}
+
+.entry-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pill {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.muted {
+    color: #94a3b8;
+}
+
+.quote {
+    font-style: italic;
+    color: #dbeafe;
+}
+
+/* ------------------------------
+   Responsive
+------------------------------ */
+@media(max-width:900px){
+    header{flex-direction: column; align-items: flex-start;}
+    header nav a{margin:8px 8px 0 0;}
+}

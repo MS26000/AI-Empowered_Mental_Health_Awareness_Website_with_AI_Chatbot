@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI-Empowered Mental Health Awareness Website with AI Chatbot - Sign Up</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .panel { max-width:420px; margin:60px auto; padding:24px; background:#fff; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.08); }
+    label{display:block;margin-top:12px;font-weight:600}
+    input{width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid #ddd}
+    .btn{display:block;width:100%;padding:10px;margin-top:16px;background:#059669;color:#fff;border:none;border-radius:8px;cursor:pointer}
+    .msg{margin-top:10px}
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>AI-Empowered Mental Health Awareness Website with AI Chatbot</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="therapist.html">Find Therapist</a></li>
+      <li><a href="testimonials.html">Testimonials</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="#" id="admin-link">Admin</a></li>
+    </ul>
+  </nav>
+  <div class="auth-links">
+    <a href="login.html" id="login-link">Login</a>
+    <a href="signup.html" id="signup-link">Sign Up</a>
+    <a href="#" id="logout-link" style="display:none;">Logout</a>
+  </div>
+</header>
+
+<div class="panel">
+  <h2>Create Account</h2>
+  <form id="signupForm">
+    <label for="email">Email</label>
+    <input id="email" type="email" placeholder="you@gmail.com" required />
+    <label for="password">Password</label>
+    <input id="password" type="password" placeholder="Enter password" required />
+    <button class="btn" type="submit">Sign Up</button>
+  </form>
+  <p class="msg" id="signupMsg"></p>
+  <p style="margin-top:12px">Already have an account? <a href="login.html">Login</a></p>
+</div>
+
+<script>
+const form = document.getElementById('signupForm');
+const msg = document.getElementById('signupMsg');
+
+function toggleNavLinks() {
+  const user = localStorage.getItem("user");
+  document.getElementById("logout-link").style.display = user ? "inline" : "none";
+}
+toggleNavLinks();
+
+document.getElementById("logout-link").onclick = () => {
+  localStorage.removeItem("user");
+  toggleNavLinks();
+  window.location.href = "signup.html";
+};
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  msg.textContent = '';
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
+
+  if (!email.endsWith('@gmail.com')) {
+    msg.style.color='red';
+    msg.textContent='Email must be a valid @gmail.com address';
+    return;
+  }
+  if (password.length < 6) {
+    msg.style.color='red';
+    msg.textContent='Password must be at least 6 characters long';
+    return;
+  }
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      localStorage.setItem("user", JSON.stringify({email: email, token: data.token}));
+      msg.style.color='green';
+      msg.textContent = "You're successfully signed up!";
+      toggleNavLinks();
+      setTimeout(()=> window.location.href="about.html", 1200);
+    } else {
+      msg.style.color='red';
+      msg.textContent = data.detail || "Registration failed.";
+    }
+  } catch {
+    msg.style.color='red';
+    msg.textContent='Error connecting to server.';
+  }
+});
+
+document.getElementById("admin-link").onclick = (e) => {
+  e.preventDefault();
+  const adminEmail = prompt("Enter admin email:");
+  const adminPass = prompt("Enter admin password:");
+  if(adminEmail==="admin@gmail.com" && adminPass==="admin123") window.location.href="admin.html";
+  else alert("Unauthorized! Incorrect admin credentials.");
+};
+</script>
+</body>
+</html>

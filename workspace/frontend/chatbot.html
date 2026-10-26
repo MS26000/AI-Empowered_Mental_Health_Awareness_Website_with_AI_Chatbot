@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wellness Chatbot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f172a; --panel:#111827; --muted:#94a3b8; --text:#e5e7eb;
+      --adaptive-accent:#8b5cf6; --adaptive-glow:rgba(139,92,246,.25);
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:Inter,system-ui,sans-serif; color:var(--text);
+      background:radial-gradient(1200px 600px at 80% -10%, var(--adaptive-glow), transparent 50%), var(--bg);
+      transition: background .6s ease;}
+    .container{max-width:760px; margin:32px auto; padding:0 16px}
+    h1{font-size:26px}
+    .sub{color:var(--muted); font-size:14px; margin-bottom:16px}
+    #adaptiveBanner{display:none; font-size:13px; color:var(--adaptive-accent); margin-bottom:16px; padding:8px 12px; border:1px solid var(--adaptive-accent); border-radius:10px; background:var(--adaptive-glow)}
+    .chat-window{background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:16px; height:480px; overflow-y:auto; display:flex; flex-direction:column; gap:10px}
+    .msg{max-width:75%; padding:10px 14px; border-radius:14px; line-height:1.4; font-size:14px}
+    .msg.user{align-self:flex-end; background:var(--adaptive-accent); color:white}
+    .msg.bot{align-self:flex-start; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08)}
+    .msg.crisis{align-self:flex-start; background:rgba(239,68,68,.15); border:1px solid #ef4444}
+    .input-row{display:flex; gap:8px; margin-top:12px}
+    input#msgInput{flex:1; background:var(--panel); color:var(--text); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:12px; font:inherit}
+    .btn{appearance:none; border:1px solid rgba(255,255,255,.1); background:var(--adaptive-accent); color:white; padding:10px 16px; border-radius:12px; font-weight:600; cursor:pointer}
+    .btn:disabled{opacity:.5; cursor:not-allowed}
+    .disclaimer{font-size:12px; color:var(--muted); margin-top:10px}
+    a.back{color:var(--adaptive-accent); font-size:13px; text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a class="back" href="mood.html">&larr; Back to mood tracker</a>
+    <h1>Wellness Chatbot</h1>
+    <div class="sub">A supportive space to talk things through - aware of your recent mood, not a replacement for professional care.</div>
+    <div id="adaptiveBanner"></div>
+
+    <div class="chat-window" id="chatWindow"></div>
+
+    <div class="input-row">
+      <input id="msgInput" placeholder="Type a message..." />
+      <button class="btn" id="sendBtn">Send</button>
+    </div>
+    <div class="disclaimer">This chatbot is not a therapist and cannot diagnose conditions. If you're in crisis, please reach out to a local emergency service or crisis line.</div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/adaptive-ui.js"></script>
+  <script>
+    if (!window.MindAuth.isLoggedIn()) {
+      window.location.href = "login.html";
+    }
+
+    const chatWindow = document.getElementById('chatWindow');
+    const msgInput = document.getElementById('msgInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function addMessage(text, cls) {
+      const div = document.createElement('div');
+      div.className = 'msg ' + cls;
+      div.textContent = text;
+      chatWindow.appendChild(div);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const text = msgInput.value.trim();
+      if (!text) return;
+
+      addMessage(text, 'user');
+      msgInput.value = '';
+      sendBtn.disabled = true;
+
+      const { ok, data } = await window.MindAuth.sendChatMessage(text);
+
+      sendBtn.disabled = false;
+      if (!ok) {
+        addMessage(data.detail || 'Something went wrong.', 'bot');
+        return;
+      }
+
+      addMessage(data.reply, data.flagged ? 'crisis' : 'bot');
+    }
+
+    sendBtn.onclick = sendMessage;
+    msgInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+    // Greet on load
+    addMessage("Hi, I'm here to talk whenever you're ready. How are you doing?", 'bot');
+    window.AdaptiveUI.apply();
+  </script>
+</body>
+</html>

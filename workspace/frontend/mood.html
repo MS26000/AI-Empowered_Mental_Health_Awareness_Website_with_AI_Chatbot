@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mood & Journal Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root{
+      --bg:#0f172a;
+      --panel:#111827;
+      --muted:#94a3b8;
+      --text:#e5e7eb;
+      --brand:#8b5cf6;
+      --accent:#22d3ee;
+      --ok:#10b981;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      /* Adaptive UI variables - set dynamically by adaptive-ui.js based on
+         the user's most recently logged emotion. Fall back to --brand. */
+      --adaptive-accent: var(--brand);
+      --adaptive-glow: rgba(139,92,246,.25);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; color:var(--text);
+      background:radial-gradient(1200px 600px at 80% -10%, var(--adaptive-glow), transparent 50%),
+      radial-gradient(800px 400px at -10% 10%, rgba(34,211,238,.18), transparent 50%), var(--bg);
+      transition: background .6s ease;
+    }
+    .container{max-width:1100px; margin:32px auto; padding:0 16px}
+    header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px}
+    h1{font-size:28px; margin:0; letter-spacing:.2px}
+    .sub{color:var(--muted); font-size:14px}
+    #adaptiveBanner{display:none; font-size:13px; color:var(--adaptive-accent); margin-bottom:16px; padding:8px 12px; border:1px solid var(--adaptive-accent); border-radius:10px; background:var(--adaptive-glow)}
+    .panel{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:16px}
+    .grid{display:grid; grid-template-columns: 1.1fr 1fr; gap:16px}
+    @media (max-width: 900px){.grid{grid-template-columns:1fr}}
+
+    textarea{width:100%; resize:vertical; min-height:120px; background:var(--panel); color:var(--text); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:12px; font:inherit}
+    .actions{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .btn{appearance:none; border:1px solid rgba(255,255,255,.1); background:linear-gradient(180deg, var(--adaptive-accent), rgba(139,92,246,.1)); color:white; padding:10px 14px; border-radius:12px; font-weight:600; cursor:pointer}
+    .btn.secondary{background:transparent}
+    .btn.ghost{background:transparent; border-color:rgba(255,255,255,.06); color:var(--muted)}
+    .btn:disabled{opacity:.5; cursor:not-allowed}
+
+    .list{display:grid; gap:10px; margin-top:10px}
+    .entry{border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.02); border-radius:14px; padding:12px}
+    .entry-top{display:flex; justify-content:space-between; gap:10px; align-items:center}
+    .pill{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.1)}
+    .muted{color:var(--muted)}
+    .tools{display:flex; gap:8px; flex-wrap:wrap}
+    .row{display:flex; align-items:center; justify-content:space-between; gap:10px}
+    .search{flex:1; background:var(--panel); border:1px solid rgba(255,255,255,.08); color:var(--text); border-radius:10px; padding:10px}
+    canvas{width:100% !important; height:260px !important}
+
+    .result-box{margin-top:10px; padding:12px; border-radius:12px; background:var(--panel); border:1px solid var(--adaptive-accent); display:none}
+    .rec-card{border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:10px; margin-top:8px}
+    .forecast-box{margin-top:12px; padding:12px; border-radius:12px; background:var(--panel); border:1px dashed rgba(255,255,255,.15)}
+    .nav-links{display:flex; gap:8px; margin-bottom:14px}
+    .nav-links a{color:var(--adaptive-accent); text-decoration:none; font-size:13px; font-weight:600; border:1px solid var(--adaptive-accent); padding:6px 10px; border-radius:8px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav-links">
+      <a href="chatbot.html">Chat with the wellness assistant</a>
+      <a href="quiz.html">Take the wellness check-in quiz</a>
+    </div>
+    <div id="adaptiveBanner"></div>
+    <header>
+      <div>
+        <h1>Mood & Journal Tracker</h1>
+        <div class="sub">Write how you're feeling - our AI reads the emotion, tracks it over time, and forecasts your trend.</div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="panel">
+        <h2 style="margin:6px 0 12px">Today</h2>
+        <div style="margin:12px 0 6px; font-weight:600">Journal</div>
+        <textarea id="journal" placeholder="How are you feeling? What happened today?"></textarea>
+        <div class="actions" style="margin-top:10px">
+          <button class="btn" id="saveBtn">Analyze & Save</button>
+          <span id="statusText" class="muted"></span>
+        </div>
+
+        <div class="result-box" id="resultBox">
+          <div><strong>Detected emotion:</strong> <span id="resultEmotion"></span></div>
+          <div><strong>Confidence:</strong> <span id="resultConfidence"></span></div>
+        </div>
+
+        <div class="forecast-box" id="forecastBox">
+          <strong>Mood forecast</strong>
+          <div id="forecastText" class="muted" style="margin-top:6px">Log a few more entries to unlock your forecast.</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="row">
+          <h2 style="margin:6px 0 12px">Mood Trend</h2>
+          <input id="search" class="search" placeholder="Search journal entries" />
+        </div>
+        <canvas id="moodChart"></canvas>
+        <div class="sub" style="margin-top:8px">Mood score: -1 (very negative) to +1 (very positive), derived from your detected emotions.</div>
+      </section>
+    </div>
+
+    <section class="panel" style="margin-top:16px">
+      <div class="row">
+        <h2 style="margin:6px 0 12px">Recommended for you</h2>
+      </div>
+      <div id="recommendations" class="muted">Log a mood entry to see personalized suggestions.</div>
+    </section>
+
+    <section class="panel" style="margin-top:16px">
+      <h2 style="margin:6px 0 12px">Your Entries</h2>
+      <div id="entries" class="list"></div>
+    </section>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/adaptive-ui.js"></script>
+  <script>
+    // Redirect to login if not authenticated
+    if (!window.MindAuth.isLoggedIn()) {
+      window.location.href = "login.html";
+    }
+
+    let chart;
+    let historyCache = [];
+
+    const journalEl = document.getElementById('journal');
+    const saveBtn = document.getElementById('saveBtn');
+    const statusText = document.getElementById('statusText');
+    const resultBox = document.getElementById('resultBox');
+    const resultEmotion = document.getElementById('resultEmotion');
+    const resultConfidence = document.getElementById('resultConfidence');
+    const entriesEl = document.getElementById('entries');
+    const searchEl = document.getElementById('search');
+    const forecastText = document.getElementById('forecastText');
+    const recommendationsEl = document.getElementById('recommendations');
+
+    saveBtn.onclick = async () => {
+      const text = journalEl.value.trim();
+      if (!text) { alert('Write something first.'); return; }
+
+      saveBtn.disabled = true;
+      statusText.textContent = 'Analyzing...';
+
+      const { ok, data } = await window.MindAuth.submitMoodEntry(text);
+
+      saveBtn.disabled = false;
+      if (!ok) {
+        statusText.textContent = '';
+        alert(data.detail || 'Something went wrong.');
+        return;
+      }
+
+      statusText.textContent = 'Saved!';
+      resultBox.style.display = 'block';
+      resultEmotion.textContent = data.emotion;
+      resultConfidence.textContent = Math.round(data.confidence * 100) + '%';
+      journalEl.value = '';
+
+      await Promise.all([loadHistory(), loadForecast(), loadRecommendations()]);
+      window.AdaptiveUI.apply();
+      setTimeout(() => statusText.textContent = '', 2000);
+    };
+
+    async function loadHistory() {
+      historyCache = await window.MindAuth.getMoodHistory();
+      renderEntries();
+      renderChart();
+    }
+
+    function renderEntries() {
+      const q = searchEl.value.trim().toLowerCase();
+      const items = historyCache.filter(e => !q || (e.entry_text || '').toLowerCase().includes(q));
+      entriesEl.innerHTML = items.length ? '' : '<div class="muted">No entries yet.</div>';
+      items.slice().reverse().forEach(e => {
+        const div = document.createElement('div');
+        div.className = 'entry';
+        const date = e.created_at ? new Date(e.created_at).toLocaleString() : '';
+        div.innerHTML = `
+          <div class="entry-top">
+            <div><span class="pill">${e.emotion}</span> <span class="muted">- ${date}</span></div>
+          </div>
+          <div style="margin-top:8px; white-space:pre-wrap">${e.entry_text || ''}</div>
+        `;
+        entriesEl.appendChild(div);
+      });
+    }
+
+    function renderChart() {
+      const ctx = document.getElementById('moodChart');
+      const labels = historyCache.map(e => e.created_at ? new Date(e.created_at).toLocaleDateString() : '');
+      const values = historyCache.map(e => e.mood_score);
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets: [{ label: 'Mood score (-1 to 1)', data: values, tension: .35, borderWidth: 2, pointRadius: 4, borderColor: getComputedStyle(document.documentElement).getPropertyValue('--adaptive-accent') }] },
+        options: { scales: { y: { min: -1, max: 1 } }, plugins: { legend: { display: false } } }
+      });
+    }
+
+    async function loadForecast() {
+      const forecast = await window.MindAuth.getMoodForecast();
+      if (forecast.error) {
+        forecastText.textContent = forecast.error;
+      } else {
+        forecastText.textContent = `Trending towards: ${forecast.predicted_trend} (score ${forecast.predicted_mood_score})`;
+      }
+    }
+
+    async function loadRecommendations() {
+      const result = await window.MindAuth.getRecommendations();
+      if (result.error) {
+        recommendationsEl.innerHTML = `<div class="muted">${result.error}</div>`;
+        return;
+      }
+      recommendationsEl.innerHTML = `<div class="muted">Based on your recent mood: ${result.based_on_emotion}</div>`;
+      (result.recommendations || []).forEach(r => {
+        const div = document.createElement('div');
+        div.className = 'rec-card';
+        div.innerHTML = `
+          <strong>${r.title}</strong> <span class="pill">${r.category}</span>
+          <div class="muted" style="margin-top:4px">${r.description || ''}</div>
+          <div class="actions" style="margin-top:8px">
+            <button class="btn ghost" data-rate="5">Helpful</button>
+            <button class="btn ghost" data-rate="1">Not helpful</button>
+          </div>
+        `;
+        div.querySelectorAll('[data-rate]').forEach(btn => {
+          btn.onclick = async () => {
+            await window.MindAuth.submitResourceFeedback(r.id, parseInt(btn.dataset.rate));
+            btn.parentElement.innerHTML = '<span class="muted">Thanks for the feedback!</span>';
+          };
+        });
+        recommendationsEl.appendChild(div);
+      });
+    }
+
+    searchEl.addEventListener('input', renderEntries);
+
+    // init
+    (async () => {
+      await loadHistory();
+      await loadForecast();
+      await loadRecommendations();
+      window.AdaptiveUI.apply();
+    })();
+  </script>
+</body>
+</html>

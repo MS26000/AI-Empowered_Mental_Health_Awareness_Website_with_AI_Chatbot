@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Empowered Mental Health Awareness Website with AI Chatbot - Scrollable One Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  /* ===== Base ===== */
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden; /* hide default scroll */
+  }
+
+  /* ===== Scroll Container ===== */
+  .scroll-container {
+    height: 100vh;
+    width: 100%;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+  }
+
+  section {
+    height: 100vh;
+    scroll-snap-align: start;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    text-align: center;
+  }
+
+  /* ===== Navbar ===== */
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #ffcc00;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+  }
+
+  header h1 {
+    color: #333;
+    font-size: 22px;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+  }
+
+  nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+  }
+
+  nav ul li a:hover {
+    color: #000;
+    text-decoration: underline;
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AI-Empowered Mental Health Awareness Website with AI Chatbot</h1>
+  <nav>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#therapist">Therapist</a></li>
+      <li><a href="#blogs">Blogs</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="scroll-container">
+  <section id="home" style="background: #f9f9f9;">Home Section</section>
+  <section id="about" style="background: #e0f7fa;">About Section</section>
+  <section id="services" style="background: #fff3e0;">Services Section</section>
+  <section id="therapist" style="background: #f3e5f5;">Therapist Section</section>
+  <section id="blogs" style="background: #e8f5e9;">Blogs Section</section>
+  <section id="contact" style="background: #fffde7;">Contact Section</section>
+</div>
+
+<script>
+  // Navbar click smooth scroll
+  document.querySelectorAll("header nav a").forEach(link => {
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute("href"));
+      target.scrollIntoView({ behavior: "smooth" });
+    });
+  });
+</script>
+
+</body>
+</html>

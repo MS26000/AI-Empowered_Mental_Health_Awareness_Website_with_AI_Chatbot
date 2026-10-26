@@ -1,0 +1,43 @@
+# Secrets (API keys, passwords)
+.env
+.env.*
+!.env.example
+*.key
+secrets.json
+
+# Python / Flask
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+env/
+instance/
+*.egg-info/
+
+# Node / frontend build
+node_modules/
+dist/
+build/
+
+# Trained models and large data (remove a line if the app needs that file and it is under 50 MB)
+*.h5
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.pkl
+*.joblib
+datasets/
+
+# Local databases
+*.sqlite3
+*.db
+
+# Jupyter, logs, editors, OS
+.ipynb_checkpoints/
+*.log
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

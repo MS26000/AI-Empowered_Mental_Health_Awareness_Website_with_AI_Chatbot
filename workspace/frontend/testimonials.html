@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testimonials </title>
+<style>
+/* Full-page background */
+body {
+    font-family:'Nunito',sans-serif;
+    margin:0;
+    padding:0;
+    background: url('images/testimonials.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color:#333;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+    position: relative;
+}
+
+/* Overlay for readability */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(234, 244, 255, 0.7); /* light overlay */
+    z-index: -1;
+}
+
+.top-menu {
+    background:#eaf4ff;
+    padding:10px 0;
+    text-align:center;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+.top-menu a {
+    margin:0 16px;
+    text-decoration:none;
+    color:#52489c;
+    font-weight:600;
+    font-size:1rem;
+}
+.top-menu a:hover { text-decoration:underline; }
+
+header {
+    background:linear-gradient(135deg,#52489c,#2447e2);
+    color:#fff;
+    padding:20px;
+    text-align:center;
+}
+header h1 { margin:0; font-size:2rem; }
+header p { margin:5px 0 0 0; font-size:1rem; }
+
+.container { flex:1; max-width:1200px; margin:30px auto; padding:0 20px; }
+
+h2 { text-align:center; color:#292feb; margin-bottom:30px; }
+
+.testimonial-card {
+    background:#eaf4ff;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom:20px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.testimonial-avatar {
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:#52489c;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:bold;
+    font-size:24px;
+    text-transform:uppercase;
+}
+
+.testimonial-card-content { flex:1; }
+.testimonial-card h3 { margin:0 0 5px 0; color:#52489c; }
+.testimonial-card p { font-size:0.95rem; line-height:1.5; margin:0; }
+
+.feedback-form {
+    background:#eaf4ff;
+    padding:20px;
+    border-radius:12px;
+    margin-top:30px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+.feedback-form h3 { margin-top:0; color:#292feb; }
+.feedback-form label { display:block; margin:10px 0 5px 0; font-weight:600; }
+.feedback-form input, .feedback-form textarea, .feedback-form select {
+    width:100%;
+    padding:8px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    margin-bottom:10px;
+}
+.feedback-form button {
+    background:#52489c;
+    color:#fff;
+    padding:10px 15px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+.feedback-form button:hover { background:#292feb; }
+
+footer {
+    background:#eaf4ff;
+    text-align:center;
+    padding:15px;
+    font-weight:bold;
+    margin-top:40px;
+    border-top:2px solid #d0e6f7;
+}
+
+@media(max-width:600px){
+    .top-menu a{display:block;margin:8px 0}
+    .testimonial-card{flex-direction:column;align-items:flex-start}
+    .testimonial-avatar{margin-bottom:10px}
+}
+</style>
+</head>
+<body>
+
+<div class="top-menu">
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="services.html">Services</a>
+<a href="therapist.html">Find Therapist</a>
+<a href="testimonials.html">Testimonials</a>
+<a href="contact.html">Contact</a>
+</div>
+
+<header>
+<h1>What Our Users Say</h1>
+<p>Read feedback from people using AI-Empowered Mental Health Awareness Website with AI Chatbot worldwide</p>
+</header>
+
+<main class="container">
+<h2>User Feedback</h2>
+
+<div class="feedback-form">
+<h3>Submit Your Feedback / Rating</h3>
+<form id="feedbackForm">
+<label for="name">Your Name</label>
+<input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+<label for="country">Country</label>
+<input type="text" id="country" name="country" placeholder="Enter your country" required>
+
+<label for="rating">Rating</label>
+<select id="rating" name="rating" required>
+<option value="">Select Rating</option>
+<option value="5">⭐️⭐️⭐️⭐️⭐️ - Excellent</option>
+<option value="4">⭐️⭐️⭐️⭐️ - Good</option>
+<option value="3">⭐️⭐️⭐️ - Average</option>
+<option value="2">⭐️⭐️ - Poor</option>
+<option value="1">⭐️ - Very Poor</option>
+</select>
+
+<label for="message">Feedback</label>
+<textarea id="message" name="message" rows="4" placeholder="Write your feedback here..." required></textarea>
+
+<button type="submit">Submit Feedback</button>
+</form>
+</div>
+
+<h2>Latest User Feedback</h2>
+<div id="userTestimonials"></div>
+</main>
+
+<script>
+const API_URL = "http://127.0.0.1:8000";
+
+// Submit feedback
+document.getElementById('feedbackForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+
+  const formData = new FormData();
+  formData.append('name', document.getElementById('name').value);
+  formData.append('country', document.getElementById('country').value);
+  formData.append('rating', document.getElementById('rating').value);
+  formData.append('message', document.getElementById('message').value);
+
+  try{
+    const res = await fetch(`${API_URL}/feedback`, { method:'POST', body: formData });
+    if(res.ok){
+      document.getElementById('feedbackForm').reset();
+      alert("✅ Feedback submitted successfully!");
+      loadFeedback();
+    } else {
+      const err = await res.json();
+      // Ensure detail is a string, not an object
+      const errorMessage = (err && err.detail && typeof err.detail === 'string')
+        ? err.detail
+        : JSON.stringify(err.detail) || 'Failed';
+      alert("Error: " + errorMessage);
+    }
+  } catch(err){
+    alert("⚠️ Cannot connect to server.");
+  }
+});
+
+// Load feedback
+async function loadFeedback(){
+  try{
+    const res = await fetch(`${API_URL}/feedback`);
+    if(!res.ok) throw new Error('Failed to fetch');
+    const feedbacks = await res.json();
+    const container = document.getElementById('userTestimonials');
+    container.innerHTML = '';
+    if(feedbacks.length===0){ container.innerHTML="<p>No feedback yet. Be the first to share!</p>"; return; }
+    feedbacks.forEach(f=>{
+      const card = document.createElement('div');
+      card.className = 'testimonial-card';
+      card.innerHTML = `<div class="testimonial-avatar">${f.name.charAt(0).toUpperCase()}</div>
+      <div class="testimonial-card-content"><h3>${f.name} (${f.country})</h3>
+      <p>Rating: ${'⭐️'.repeat(f.rating)}<br>${f.message}</p></div>`;
+      container.appendChild(card);
+    });
+  }catch(err){
+    document.getElementById('userTestimonials').innerHTML="<p style='color:red'>⚠️ Failed to load feedback.</p>";
+  }
+}
+
+// Initial load
+loadFeedback();
+</script>
+</body>
+</html>

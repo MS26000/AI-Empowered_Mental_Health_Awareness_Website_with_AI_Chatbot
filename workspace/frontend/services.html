@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-gradient: linear-gradient(135deg, #dbeafe, #fef9c3, #fce7f3);
+  --text:#1f2937; 
+  --accent:#6d28d9; 
+  --muted:#6b7280; 
+  --btn:#9333ea; 
+  --btn-hover:#6d28d9;
+  --card:#f0f9ff;
+  --card-hover:#c4b5fd;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;}
+body{background:var(--bg-gradient);color:var(--text);min-height:100vh;margin:0;line-height:1.6;}
+html{scroll-behavior:smooth;}
+
+header{
+  padding:20px 0;
+  text-align:center;
+  background: linear-gradient(135deg, #8e31e6ee, #9424e4);
+  border-radius:0 0 20px 20px;
+  position: sticky;
+  top:0;
+  z-index: 100;
+}
+header a {
+  margin:0 20px;
+  text-decoration: none;
+  color: #fff;
+  font-weight:700;
+  font-size:1.1rem;
+} 
+header a:hover{text-decoration: underline;}
+
+.container{
+  max-width:1200px;
+  margin:40px auto;
+  padding:0 16px;
+}
+h2{text-align:center;color:var(--accent);margin-bottom:32px;font-size:3rem;}
+
+.grid{
+  display:grid;
+  gap:32px;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  justify-items: center;
+}
+
+.card.clicked{
+  background: var(--card-hover);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.card{
+  background: var(--card);
+  border-radius:20px;
+  padding:30px;
+  text-align:center;
+  box-shadow:0 8px 24px rgba(0,0,0,0.15);
+  transition:transform 0.3s, background 0.3s, box-shadow 0.3s;
+  min-height:280px;
+  width:100%;
+  cursor:pointer;
+}
+.card:hover{transform:translateY(-5px);}
+.emoji{font-size:60px;margin-bottom:14px;display:block;}
+.card h3{margin:12px 0;color:var(--accent);}
+.card p{margin:6px 0;color:var(--muted);}
+.card a{
+  display:inline-block;
+  margin-top:16px;
+  padding:12px 26px;
+  background:var(--btn);
+  color:white;
+  border-radius:30px;
+  text-decoration:none;
+  font-weight:600;
+  transition:0.3s;
+}
+.card a:hover{background:var(--btn-hover);}
+.row{margin-bottom:32px;}
+
+footer{
+  background: #eaf4ff;
+  text-align: center;
+  padding: 20px;
+  font-weight: bold;
+  margin-top: 40px;
+}
+@media(max-width:1024px){.grid{grid-template-columns:repeat(2,1fr);} }
+@media(max-width:600px){.grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="services.html">Services</a>
+  <a href="therapist.html">Find Therapist</a>
+  <a href="testimonials.html">Testimonials</a>
+  <a href="contact.html">Contact</a>
+</header>
+
+<div class="container">
+  <h2 id="services">Our Services</h2>
+
+  <div class="grid row">
+    <div class="card">
+      <span class="emoji">📖</span>
+      <h3>Mental Health Info</h3>
+      <p>Resources and guides for mental wellness.</p>
+      <a href="information.html" data-service="info">Go to Info</a>
+    </div>
+    <div class="card">
+      <span class="emoji">😊</span>
+      <h3>Mood Tracker</h3>
+      <p>Track your daily mood and visualize trends.</p>
+      <a href="mood.html" data-service="mood">Go to Mood Tracker</a>
+    </div>
+    <div class="card">
+      <span class="emoji">😣</span>
+      <h3>Stress Detection</h3>
+      <p>Analyze your stress levels and get tips.</p>
+      <a href="stress.html" data-service="stress">Go to Stress Detection</a>
+    </div>
+  </div>
+
+  <div class="grid row">
+    <div class="card">
+      <span class="emoji">🧘</span>
+      <h3>Meditation</h3>
+      <p>Relax and meditate with guided sessions.</p>
+      <a href="meditation.html" data-service="meditation">Go to Meditation</a>
+    </div>
+    <div class="card">
+      <span class="emoji">💪</span>
+      <h3>Exercise</h3>
+      <p>Mental wellness exercises to stay healthy.</p>
+      <a href="exercises.html" data-service="exercise">Go to Exercise</a>
+    </div>
+    <div class="card">
+      <span class="emoji">🥗</span>
+      <h3>Diet</h3>
+      <p>Learn foods that improve mental wellness.</p>
+      <a href="diet.html" data-service="diet">Go to Diet</a>
+    </div>
+  </div>
+</div>
+
+
+<script src="auth.js"></script>
+<script>
+const API_URL = "http://127.0.0.1:8000";
+
+// ---- Navbar login/signup/logout toggle ----
+const loginLink = document.getElementById('login-link');
+const signupLink = document.getElementById('signup-link');
+const logoutLink = document.getElementById('logout-link');
+
+const user = localStorage.getItem('user');
+if(user){
+  loginLink.style.display = 'none';
+  signupLink.style.display = 'none';
+  logoutLink.style.display = 'inline';
+} else {
+  loginLink.style.display = 'inline';
+  signupLink.style.display = 'inline';
+  logoutLink.style.display = 'none';
+}
+
+// Logout
+logoutLink.addEventListener('click', (e)=>{
+  e.preventDefault();
+  localStorage.removeItem('user');
+  localStorage.removeItem('isAdmin');
+  location.reload();
+});
+
+// ---- Card click highlight ----
+document.querySelectorAll('.card').forEach(card=>{
+  card.addEventListener('click', ()=>{
+    document.querySelectorAll('.card').forEach(c=>c.classList.remove('clicked'));
+    card.classList.add('clicked');
+  });
+});
+
+// ---- Service click logging ----
+const username = user ? JSON.parse(user).username : null;
+document.querySelectorAll('.card a').forEach(link=>{
+  link.addEventListener('click', async e=>{
+    if(!username){
+      e.preventDefault();
+      alert("Please login first to access this service!");
+      return;
+    }
+    const service = link.dataset.service;
+    try{
+      await fetch(`${API_URL}/service_click`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({user: username, service})
+      });
+    }catch(err){
+      console.error("Error sending service click:", err);
+    }
+  });
+});
+</script>
+
+</body>
+</html>

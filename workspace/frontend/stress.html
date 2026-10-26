@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stress Detection</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      padding: 40px 20px;
+      background: url('images/stress.png') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+      color: #ebdc91;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(233, 219, 219, 0.2);
+      z-index: -1;
+    }
+    .container { max-width: 800px; width: 100%; }
+    .card {
+      background: rgba(245, 242, 241, 0.3);
+      padding: 2em;
+      border-radius: 20px;
+      width: 100%;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      margin-bottom: 30px;
+      color: #1e3a8a;
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    h3 { text-align: center; color: #6d28d9; margin-bottom: 20px; }
+    .form-group input { border-radius: 10px; }
+    #result {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+      color: #e11d48;
+      white-space: pre-line;
+    }
+    .history-card {
+      background: #f9fafb;
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      position: relative;
+    }
+    .history-card h5 { margin: 0 0 6px 0; color: #374151; }
+    .history-card p { margin: 0; font-size: 0.9rem; color: #4b5563; }
+    .Low { border-left: 5px solid #16a34a; }
+    .Medium { border-left: 5px solid #f59e0b; }
+    .High { border-left: 5px solid #dc2626; }
+    .btn-delete { position: absolute; top: 10px; right: 10px; }
+    .modal-body { color: #1e3a8a; }
+    .modal-body h5 { color: #1e40af; font-weight: bold; }
+    .modal-body strong { color: #1e40af; }
+    .modal-body em { color: #3730a3; font-style: italic; }
+    .modal-title { color: #1e40af; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Stress Detection Card -->
+    <div class="card">
+      <h3>Detect Your Stress Level</h3>
+      <form id="stressForm">
+        <div class="form-group">
+          <label>Sleeping Hours:</label>
+          <input type="number" class="form-control" id="sleep" min="1" max="24" required>
+        </div>
+        <div class="form-group">
+          <label>Systolic Blood Pressure (mmHg):</label>
+          <input type="number" class="form-control" id="systolic" min="80" max="250" placeholder="120" required>
+        </div>
+        <div class="form-group">
+          <label>Diastolic Blood Pressure (mmHg):</label>
+          <input type="number" class="form-control" id="diastolic" min="40" max="150" placeholder="80" required>
+        </div>
+        <div class="form-group">
+          <label>Respiration Rate (breaths per min):</label>
+          <input type="number" class="form-control" id="resp" min="5" max="40" required>
+        </div>
+        <div class="form-group">
+          <label>Heart Rate (Resting bpm):</label>
+          <input type="number" class="form-control" id="heart" min="30" max="200" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Predict</button>
+      </form>
+      <div id="result"></div>
+    </div>
+
+    <!-- Stress History Section -->
+    <div class="card">
+      <h3>Your Stress History</h3>
+      <div id="historyContainer">
+        <p class="text-muted text-center">No history found. Run a test to see your results here.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "http://127.0.0.1:8000";
+    const userData = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+    const user = "permanent_user";
+    const resultDiv = document.getElementById("result");
+    const historyContainer = document.getElementById("historyContainer");
+
+    async function loadHistory() {
+      try {
+        const res = await fetch(`${API_URL}/stress/history?user=${user}`);
+        const history = await res.json();
+        historyContainer.innerHTML = "";
+        if (!history.length) {
+          historyContainer.innerHTML = `<p class="text-muted text-center">No history found. Run a test to see your results here.</p>`;
+          return;
+        }
+
+        history.forEach(item => {
+          const div = document.createElement("div");
+          div.className = `history-card ${item.stress_level}`;
+          div.innerHTML = `
+            <h5>Stress Level: ${item.stress_level}</h5>
+            <p><strong>Advice:</strong> ${item.advice}</p>
+            <p><strong>Sleep:</strong> ${item.sleep} hrs |
+               <strong>BP:</strong> ${item.bp} |
+               <strong>Resp:</strong> ${item.resp} |
+               <strong>Heart:</strong> ${item.heart}</p>
+            <p><em>Date: ${new Date(item.timestamp).toLocaleDateString()}</em></p>
+            <button class="btn btn-sm btn-danger btn-delete" data-id="${item.id}">Delete</button>
+          `;
+          historyContainer.appendChild(div);
+        });
+
+        document.querySelectorAll(".btn-delete").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            if (!confirm("Delete this entry?")) return;
+            const id = btn.getAttribute("data-id");
+            try {
+              const res = await fetch(`${API_URL}/stress/history/delete/${id}`, { method: "DELETE" });
+              const data = await res.json();
+              if (res.ok) loadHistory();
+              else alert(data.detail || "Failed to delete entry.");
+            } catch {
+              alert("Failed to delete entry.");
+            }
+          });
+        });
+      } catch {
+        historyContainer.innerHTML = `<p class="text-danger text-center">Failed to load history.</p>`;
+      }
+    }
+
+    document.getElementById("stressForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const sleep = parseFloat(document.getElementById("sleep").value);
+      const systolic = parseInt(document.getElementById("systolic").value);
+      const diastolic = parseInt(document.getElementById("diastolic").value);
+      const resp = parseFloat(document.getElementById("resp").value);
+      const heart = parseFloat(document.getElementById("heart").value);
+      const bp = `${systolic}/${diastolic}`;
+
+      try {
+        const res = await fetch(`${API_URL}/stress`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user, sleep, bp, resp, heart })
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        // Check if the response contains the expected data
+        if (data && data.stress_level && data.advice) {
+          resultDiv.innerText = `Stress Level: ${data.stress_level}\n${data.advice}`;
+          document.getElementById("stressForm").reset();
+          loadHistory();
+        } else {
+          resultDiv.innerText = "Error: Invalid response from server. Please try again.";
+        }
+      } catch (error) {
+        console.error("Stress prediction error:", error);
+        resultDiv.innerText = "Error predicting stress. Please check your input values and try again.";
+      }
+    });
+
+    loadHistory();
+  </script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Therapist </title>
+<style>
+body {
+  font-family: 'Nunito', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f9fbfd;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  scroll-behavior: smooth;
+}
+
+/* Top menu */
+.top-menu {
+  background: #eaf4ff;
+  padding: 10px 0;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.top-menu a {
+  margin: 0 16px;
+  text-decoration: none;
+  color: #52489c;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.top-menu a:hover {
+  text-decoration: underline;
+}
+
+header {
+  background: linear-gradient(135deg, #52489c, #2447e2);
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+header p {
+  margin: 5px 0 0 0;
+  font-size: 1rem;
+}
+
+.container {
+  flex: 1;
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+h2 {
+  text-align: center;
+  color: #292feb;
+  margin: 30px 0 20px;
+}
+
+.map-container {
+  margin: 20px auto;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+iframe {
+  width: 100%;
+  height: 450px;
+  border: none;
+}
+
+.search-container {
+  text-align: center;
+  margin: 20px 0;
+}
+
+#locationInput {
+  width: 60%;
+  max-width: 400px;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+#searchBtn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  margin-left: 8px;
+  border: none;
+  border-radius: 8px;
+  background: #52489c;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#searchBtn:hover {
+  background: #2447e2;
+}
+
+.note {
+  background: #eaf4ff;
+  padding: 15px;
+  border-left: 5px solid #7721e8;
+  margin-top: 20px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+footer {
+  background: #eaf4ff;
+  text-align: center;
+  padding: 15px;
+  font-weight: bold;
+  margin-top: 40px;
+  border-top: 2px solid #d0e6f7;
+}
+
+/* Responsive */
+@media(max-width:600px){
+  .top-menu a {
+    display: block;
+    margin: 8px 0;
+  }
+  #locationInput {
+    width: 80%;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Top menu -->
+<div class="top-menu">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="services.html">Services</a>
+  <a href="#therapist">Find Therapist</a>
+  <a href="testimonials.html">Testimonials</a>
+  <a href="contact.html">Contact</a>
+  <a href="#" id="login-link" style="display:none;">Login</a>
+  <a href="#" id="signup-link" style="display:none;">Sign Up</a>
+  <a href="#" id="logout-link" style="display:none;">Logout</a>
+</div>
+
+<header>
+  <h1>Find a Therapist Near You</h1>
+  <p>Discover trusted therapists and counselors across all Pakistan and worldwide</p>
+</header>
+
+<main class="container" id="therapist">
+
+  <!-- Search bar -->
+  <div class="search-container">
+    <input type="text" id="locationInput" placeholder="Type any city, state, or country">
+    <button id="searchBtn">Search</button>
+  </div>
+
+  <!-- Default map -->
+  <h2>Therapists</h2>
+  <div class="map-container">
+    <iframe id="mapFrame" src="https://www.google.com/maps?q=therapist+in+Pakistan&output=embed"></iframe>
+  </div>
+
+  <div class="note">
+    🌍 Tip: Use the search box to find therapists in any city, state, or country worldwide.  
+    🚑 For emergencies, please contact your nearest hospital or helpline immediately.
+  </div>
+</main>
+
+
+<script src="auth.js"></script>
+<script>
+// ---- Navbar auth toggle & login protection ----
+window.addEventListener('DOMContentLoaded', () => {
+  window.MindAuth.enforcePageProtection();  // redirect if not logged in
+  window.MindAuth.initAuthUI();             // toggle login/signup/logout links
+  window.MindAuth.protectNavClicks();       // protect navbar links
+});
+
+
+
+// ---- Map search functionality ----
+const searchBtn = document.getElementById('searchBtn');
+const locationInput = document.getElementById('locationInput');
+const mapFrame = document.getElementById('mapFrame');
+
+function updateMap() {
+  const location = locationInput.value.trim();
+  if(location) {
+    mapFrame.src = `https://www.google.com/maps?q=therapist+in+${encodeURIComponent(location)}&output=embed`;
+  }
+}
+
+searchBtn.addEventListener('click', updateMap);
+locationInput.addEventListener('keypress', function(e) {
+  if(e.key === 'Enter') updateMap();
+});
+</script>
+
+</body>
+</html>

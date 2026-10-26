@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI-Empowered Mental Health Awareness Website with AI Chatbot Admin Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body { font-family: Arial, sans-serif; margin:0; background:#f4f6f9; }
+  header { background:#8b5cf6; color:white; padding:15px; text-align:center; }
+  nav { background:#6d28d9; padding:10px; display:flex; flex-wrap:wrap; justify-content:space-around; }
+  nav button { background:white; border:none; padding:10px 15px; border-radius:5px; cursor:pointer; margin:2px; }
+  nav button:hover { background:#ddd; }
+  .container { padding:20px; }
+  section { display:none; margin-top:20px; }
+  table { width:100%; border-collapse: collapse; margin-top:10px; }
+  th, td { border:1px solid #ccc; padding:8px; text-align:center; }
+  th { background:#eee; }
+  .delete-btn { color:white; background:red; border:none; padding:5px 10px; cursor:pointer; border-radius:4px; }
+  canvas { max-width:600px; margin-top:20px; }
+</style>
+</head>
+<body>
+
+<div id="loginForm" style="display:block; text-align:center; margin-top:100px;">
+  <h2>Admin Login</h2>
+  <form onsubmit="adminLogin(event)">
+    <input type="text" id="username" placeholder="Username or Email" required style="padding:10px; margin:5px;"><br>
+    <input type="password" id="password" placeholder="Password" required style="padding:10px; margin:5px;"><br>
+    <button type="submit" style="padding:10px 20px; margin:5px;">Login</button>
+  </form>
+</div>
+
+<div id="dashboard" style="display:none;">
+<header>
+  <h1>⚙️ Admin Dashboard - AI-Empowered_Mental_Health_Awareness_Website_with_AI_Chatbot</h1>
+</header>
+
+<nav>
+  <button onclick="showSection('users')">👥 Users</button>
+  <button onclick="showSection('feedback')">💬 Feedback</button>
+  <button onclick="showSection('analytics')">📊 Analytics</button>
+  <button onclick="logoutAdmin()">🚪 Logout</button>
+</nav>
+
+<div class="container">
+  <!-- Users -->
+  <section id="users">
+    <h2>👥 Users</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Email</th><th>Action</th></tr></thead>
+      <tbody id="userTable"></tbody>
+    </table>
+  </section>
+
+  <!-- Feedback -->
+  <section id="feedback">
+    <h2>💬 Feedback</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Name</th><th>Country</th><th>Rating</th><th>Message</th><th>Action</th></tr></thead>
+      <tbody id="feedbackTable"></tbody>
+    </table>
+  </section>
+
+  <!-- Analytics -->
+  <section id="analytics">
+    <h2>📊 Analytics</h2>
+    <canvas id="userChart" width="500" height="300"></canvas>
+  </section>
+</div>
+</div>
+
+<script>
+const API_URL = "http://127.0.0.1:8000";
+let adminToken = localStorage.getItem("adminToken");
+
+// --- Check Login Status ---
+if (adminToken) {
+  document.getElementById("loginForm").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+  showSection("users");
+  loadUsers();
+  loadFeedbacks();
+  loadChart();
+} else {
+  document.getElementById("loginForm").style.display = "block";
+  document.getElementById("dashboard").style.display = "none";
+}
+
+// --- Admin Login ---
+async function adminLogin(event) {
+  event.preventDefault();
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  try {
+    const res = await fetch(`${API_URL}/admin/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ username, password })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem("adminToken", data.token);
+      adminToken = data.token;
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
+      showSection("users");
+      loadUsers();
+      loadFeedbacks();
+      loadChart();
+    } else {
+      alert(data.detail || "Login failed");
+    }
+  } catch(e) {
+    alert("Error: " + e.message);
+  }
+}
+
+// --- Section Show/Hide ---
+function showSection(id){
+  document.querySelectorAll("section").forEach(s=>s.style.display="none");
+  document.getElementById(id).style.display="block";
+}
+
+// --- Users ---
+async function loadUsers() {
+  try {
+    const res = await fetch(`${API_URL}/admin/users`, { headers: { token: adminToken } });
+    const users = await res.json();
+    const table = document.getElementById("userTable");
+    table.innerHTML = "";
+    users.forEach(u => {
+      const row = table.insertRow();
+      row.insertCell(0).textContent = u.id;
+      row.insertCell(1).textContent = u.email;
+      row.insertCell(2).innerHTML = `<button class="delete-btn" onclick="deleteUser(${u.id})">Delete</button>`;
+    });
+  } catch(e) {
+    console.error("Error loading users:", e);
+  }
+}
+async function deleteUser(id){
+  if(!confirm("Are you sure to delete this user?")) return;
+  await fetch(`${API_URL}/admin/users/${id}`, { method:"DELETE", headers: { token: adminToken } });
+  loadUsers();
+}
+
+// --- Feedback ---
+async function loadFeedbacks() {
+  try {
+    const res = await fetch(`${API_URL}/admin/feedbacks`, { headers: { token: adminToken } });
+    const feedbacks = await res.json();
+    const table = document.getElementById("feedbackTable");
+    table.innerHTML = "";
+    feedbacks.forEach(f => {
+      const row = table.insertRow();
+      row.insertCell(0).textContent = f.id;
+      row.insertCell(1).textContent = f.name;
+      row.insertCell(2).textContent = f.country;
+      row.insertCell(3).textContent = f.rating;
+      row.insertCell(4).textContent = f.message;
+      row.insertCell(5).innerHTML = `<button class="delete-btn" onclick="deleteFeedback(${f.id})">Delete</button>`;
+    });
+  } catch(e){
+    console.error("Error loading feedbacks:", e);
+  }
+}
+async function deleteFeedback(id){
+  if(!confirm("Are you sure to delete this feedback?")) return;
+  await fetch(`${API_URL}/admin/feedbacks/${id}`, { method:"DELETE", headers: { token: adminToken } });
+  loadFeedbacks();
+}
+
+// --- Analytics ---
+async function loadChart(){
+  try {
+    const res = await fetch(`${API_URL}/admin/users`, { headers: { token: adminToken } });
+    const users = await res.json();
+    const ctx = document.getElementById("userChart").getContext("2d");
+    new Chart(ctx, {
+      type:"bar",
+      data:{
+        labels: users.map(u=>u.email),
+        datasets:[{label:"Users", data: users.map(_=>1), backgroundColor:"#8b5cf6"}]
+      },
+      options:{ responsive:true, maintainAspectRatio:false }
+    });
+  } catch(e) {
+    console.error("Error loading chart:", e);
+  }
+}
+
+// --- Logout ---
+function logoutAdmin(){
+  localStorage.removeItem("adminToken");
+  adminToken = null;
+  document.getElementById("loginForm").style.display = "block";
+  document.getElementById("dashboard").style.display = "none";
+}
+</script>
+
+</body>
+</html>

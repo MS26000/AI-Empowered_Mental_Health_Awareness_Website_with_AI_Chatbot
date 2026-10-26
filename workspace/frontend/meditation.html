@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meditation Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f172a; --panel:#111827; --muted:#94a3b8; --text:#e5e7eb;
+      --brand:#8b5cf6; --accent:#22d3ee; --ok:#10b981; --warn:#f59e0b; --bad:#ef4444;
+    }
+    *{box-sizing:border-box; margin:0; padding:0;}
+    html,body{height:100%; font-family:Inter,sans-serif; background:var(--bg); color:var(--text);}
+    header{padding:20px; text-align:center;}
+    header h1{color:var(--brand); font-size:32px; margin-bottom:4px;}
+    .sub{color:var(--muted); font-size:14px;}
+    .container{max-width:1100px;margin:32px auto;padding:0 16px;}
+    .panel{background:var(--panel); border-radius:16px; padding:24px; margin-bottom:24px; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+    h2{color:var(--accent); margin-bottom:16px; font-size:24px;}
+    p{color:var(--text); font-size:16px; line-height:1.5;}
+    
+    /* Meditation Videos Grid */
+    .videos{display:grid; grid-template-columns:1fr; gap:24px;}
+    .videos iframe{width:100%; height:400px; border-radius:12px;}
+    @media(min-width:900px){.videos{grid-template-columns:1fr 1fr;}
+    .videos iframe{height:320px;}}
+
+    /* Timer Section */
+    .timer-section{text-align:center; padding:20px; background:#1c1f2a; border-radius:12px; margin-bottom:24px;}
+    .timer-btn{padding:12px 20px; margin:6px; font-size:16px; border:none; border-radius:8px; background:#8b5cf6; color:white; cursor:pointer; transition:0.3s;}
+    .timer-btn:hover{background:#6d28d9;}
+    .timer-display{font-size:36px; font-weight:700; margin-top:12px; color:#22d3ee;}
+    .custom-input{padding:10px; margin-top:12px; border-radius:8px; border:none; text-align:center; width:150px;}
+    .custom-select{padding:10px; margin-top:12px; border-radius:8px; border:none;}
+
+    /* Progress Ring */
+    .progress-ring{margin:20px auto; width:120px; height:120px; position:relative;}
+    .progress-ring svg{transform:rotate(-90deg);}
+    .progress-ring circle{fill:none; stroke-width:10; stroke-linecap:round;}
+    .progress-ring .bg{stroke:#2d3748;}
+    .progress-ring .progress{stroke:#22d3ee; stroke-dasharray:377; stroke-dashoffset:377; transition:stroke-dashoffset 1s linear;}
+    
+    /* Session History */
+    .history ul{list-style:none; padding:0;}
+    .history li{padding:6px 0; font-size:14px; color:var(--muted); display:flex; justify-content:space-between; align-items:center;}
+    .delete-btn{background:var(--bad); color:white; border:none; border-radius:6px; padding:4px 10px; cursor:pointer; transition:0.3s;}
+    .delete-btn:hover{background:#b91c1c;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🧘 Meditation & Mindfulness</h1>
+    <div class="sub">Relax, meditate, and track your calm moments daily.</div>
+  </header>
+  <div class="container">
+    <!-- Meditation Timers -->
+    <section class="panel timer-section">
+      <h2>Meditation Timers</h2>
+      <div>
+        <button class="timer-btn" onclick="setTimer(30)">30 sec</button>
+        <button class="timer-btn" onclick="setTimer(60)">1 min</button>
+        <button class="timer-btn" onclick="setTimer(120)">2 min</button>
+        <button class="timer-btn" onclick="setTimer(300)">5 min</button>
+        <button class="timer-btn" onclick="setTimer(600)">10 min</button>
+        <button class="timer-btn" onclick="setTimer(900)">15 min</button>
+      </div>
+      <div style="margin-top:12px;">
+        <input type="number" id="customTime" class="custom-input" placeholder="Enter time" />
+        <select id="timeUnit" class="custom-select">
+          <option value="seconds">Seconds</option>
+          <option value="minutes">Minutes</option>
+          <option value="hours">Hours</option>
+        </select>
+        <button class="timer-btn" onclick="setCustomTimer()">Set Custom</button>
+      </div>
+      
+      <div class="progress-ring">
+        <svg width="120" height="120">
+          <circle class="bg" r="60" cx="60" cy="60"></circle>
+          <circle class="progress" r="60" cx="60" cy="60"></circle>
+        </svg>
+      </div>
+      <div class="timer-display" id="timerDisplay">00:00</div>
+      <div style="margin-top:12px;">
+        <button class="timer-btn" onclick="startTimer()">Start</button>
+        <button class="timer-btn" onclick="stopTimer()">Stop</button>
+      </div>
+    </section>
+
+    <!-- Meditation Videos -->
+    <section class="panel">
+      <h2>Guided Meditation Videos</h2>
+      <div class="videos">
+        <iframe src="https://www.youtube.com/embed/inpok4MKVLM" title="5-Minute Mindfulness Meditation" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/iMOOtQ4pcHA" title="German-Guided Meditation" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/MIr3RsUWrdo" title="Stress Relief Meditation" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/6p_yaNFSYao" title="Deep Relaxation Meditation" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/8ln4XfRi6uw" title="Overcome Distraction from Meditation" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/ZToicYcHIOU" title="10 Minute Mindfulness Meditation" allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <!-- Mindfulness Tips -->
+    <section class="panel">
+      <h2>Tips for Mindfulness</h2>
+      <p>Start with 5–10 minutes daily, focus on your breathing, and gradually increase your session time. 
+      Remember to be patient with yourself — mindfulness is a journey, not a race.</p>
+    </section>
+
+    <!-- Session History -->
+    <section class="panel history">
+      <h2>📝 Meditation History</h2>
+      <ul id="historyList"></ul>
+    </section>
+  </div>
+
+  <!-- Alarm Sound -->
+  <audio id="alarmSound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto"></audio>
+
+  <script>
+    let timerInterval;
+    let timeLeft = 0;
+    let totalTime = 0;
+    const progressCircle = document.querySelector('.progress');
+    const circumference = 2 * Math.PI * 60;
+    const alarmSound = document.getElementById('alarmSound');
+
+    function setTimer(seconds){
+      stopTimer();
+      timeLeft = seconds;
+      totalTime = seconds;
+      updateDisplay(timeLeft);
+      updateProgress(1);
+    }
+
+    function setCustomTimer(){
+      const input = document.getElementById("customTime").value;
+      const unit = document.getElementById("timeUnit").value;
+      let seconds = 0;
+      if(input && input > 0){
+        if(unit === "seconds") seconds = Number(input);
+        if(unit === "minutes") seconds = Number(input) * 60;
+        if(unit === "hours") seconds = Number(input) * 3600;
+        setTimer(seconds);
+      } else {
+        alert("Enter valid time!");
+      }
+    }
+
+    function startTimer(){
+      if(timeLeft <= 0) { alert("Please select a timer duration first!"); return; }
+      clearInterval(timerInterval);
+      timerInterval = setInterval(()=>{
+        timeLeft--;
+        updateDisplay(timeLeft);
+        updateProgress(timeLeft / totalTime);
+        if(timeLeft <= 0){
+          clearInterval(timerInterval);
+          alarmSound.currentTime = 0;
+          alarmSound.play();
+          alert("Meditation Complete! 🎵");
+          saveHistory(totalTime);
+        }
+      },1000);
+    }
+
+    function stopTimer(){
+      clearInterval(timerInterval);
+      alarmSound.pause();
+      alarmSound.currentTime = 0;
+      updateDisplay(timeLeft);
+    }
+
+    function updateDisplay(seconds){
+      const m = Math.floor(seconds/60).toString().padStart(2,'0');
+      const s = (seconds%60).toString().padStart(2,'0');
+      document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+    }
+
+    function updateProgress(ratio){
+      const offset = circumference * (1 - ratio);
+      progressCircle.style.strokeDashoffset = offset;
+    }
+
+    function saveHistory(duration){
+      const history = JSON.parse(localStorage.getItem("meditationHistory")) || [];
+      history.push({id: Date.now(), duration, timestamp: new Date().toISOString()});
+      localStorage.setItem("meditationHistory", JSON.stringify(history));
+      renderHistory();
+    }
+
+    function deleteHistory(id){
+      let history = JSON.parse(localStorage.getItem("meditationHistory")) || [];
+      history = history.filter(item => item.id !== id);
+      localStorage.setItem("meditationHistory", JSON.stringify(history));
+      renderHistory();
+    }
+
+    function renderHistory(){
+      const history = JSON.parse(localStorage.getItem("meditationHistory")) || [];
+      const list = document.getElementById("historyList");
+      list.innerHTML = "";
+      history.forEach(item=>{
+        const li = document.createElement("li");
+        li.textContent = `${(item.duration/60).toFixed(1)} min session on ${new Date(item.timestamp).toLocaleString()}`;
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "Delete";
+        delBtn.className = "delete-btn";
+        delBtn.onclick = ()=>deleteHistory(item.id);
+        li.appendChild(delBtn);
+        list.appendChild(li);
+      });
+    }
+
+    renderHistory();
+  </script>
+</body>
+</html>

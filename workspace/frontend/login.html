@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI-Empowered Mental Health Awareness Website with AI Chatbot - Login</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+.panel { max-width:420px; margin:60px auto; padding:24px; background:#fff; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.08);}
+label{display:block;margin-top:12px;font-weight:600}
+input{width:100%;padding:10px;margin-top:6px;border-radius:8px;border:1px solid #ddd}
+.btn{display:block;width:100%;padding:10px;margin-top:16px;background:#52489c;color:#fff;border:none;border-radius:8px;cursor:pointer}
+.msg{margin-top:10px;font-size:0.95rem}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AI-Empowered Mental Health Awareness Website with AI Chatbot</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="chatbot.html">AI Chatbot</a></li>
+      <li><a href="therapist.html">Find Therapist</a></li>
+      <li><a href="testimonials.html">Testimonials</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="#" id="admin-link">Admin</a></li>
+    </ul>
+  </nav>
+  <div class="auth-links">
+    <a href="login.html" id="login-link">Login</a>
+    <a href="signup.html" id="signup-link">Sign Up</a>
+    <a href="#" id="logout-link" style="display:none;">Logout</a>
+  </div>
+</header>
+
+<div class="panel">
+  <h2>Login to AI-Empowered Mental Health Awareness Website with AI Chatbot</h2>
+  <form id="loginForm">
+    <label for="email">Email</label>
+    <input id="email" type="email" placeholder="you@gmail.com" required />
+
+    <label for="password">Password</label>
+    <input id="password" type="password" placeholder="Enter password" required />
+
+    <button class="btn" type="submit">Login</button>
+  </form>
+  <p class="msg" id="loginMsg"></p>
+  <p style="margin-top:12px; text-align:center;">Don't have an account? <a href="signup.html">Sign up</a></p>
+</div>
+
+<script>
+const form = document.getElementById('loginForm');
+const msg = document.getElementById('loginMsg');
+
+function toggleNavLinks() {
+  const user = localStorage.getItem("user");
+  document.getElementById("login-link").style.display = user ? "none" : "inline";
+  document.getElementById("signup-link").style.display = user ? "none" : "inline";
+  document.getElementById("logout-link").style.display = user ? "inline" : "none";
+}
+toggleNavLinks();
+
+document.getElementById("logout-link").onclick = () => {
+  localStorage.removeItem("user");
+  toggleNavLinks();
+  window.location.href = "login.html";
+};
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  msg.textContent = '';
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      localStorage.setItem("user", JSON.stringify({email: email, token: data.token}));
+      localStorage.setItem("userLoggedIn", "true");   // ← THIS LINE IS MISSING
+      msg.style.color = 'green';
+      msg.textContent = "Login successful — redirecting...";
+      toggleNavLinks();
+// Go back to where the user came from, or default to about.html
+      const dest = document.referrer && document.referrer.includes(location.origin)
+        ? document.referrer : "about.html";
+      setTimeout(() => window.location.href = dest, 900);
+    } else {
+      msg.style.color = 'red';
+      msg.textContent = data.detail || "Invalid credentials.";
+    }
+  } catch(err) {
+    msg.style.color='red';
+    msg.textContent='Error connecting to server.';
+  }
+});
+
+document.getElementById("admin-link").onclick = async (e) => {
+  e.preventDefault();
+  const adminEmail = prompt("Enter admin email:");
+  const adminPass = prompt("Enter admin password:");
+  if (!adminEmail || !adminPass) return;
+  try {
+    const res = await fetch("http://127.0.0.1:8000/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      body: `username=${encodeURIComponent(adminEmail)}&password=${encodeURIComponent(adminPass)}`
+    });
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem("admin", JSON.stringify({ token: data.token, username: data.username }));
+      window.location.href = "admin.html";
+    } else {
+      alert("Unauthorized! " + (data.detail || "Incorrect admin credentials."));
+    }
+  } catch (err) {
+    alert("Error connecting to server.");
+  }
+};
+</script>
+</body>
+</html>

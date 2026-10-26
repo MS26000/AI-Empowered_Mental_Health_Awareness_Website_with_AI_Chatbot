@@ -1,0 +1,14 @@
+Overall test accuracy: 0.8950
+
+              precision    recall  f1-score   support
+
+       anger      0.933     0.952     0.942       581
+        fear      0.958     0.889     0.922       695
+         joy      0.732     0.843     0.784       159
+        love      0.912     0.862     0.886       275
+     sadness      0.837     0.848     0.843       224
+    surprise      0.630     0.879     0.734        66
+
+    accuracy                          0.895      2000
+   macro avg      0.834     0.879     0.852      2000
+weighted avg      0.902     0.895     0.897      2000

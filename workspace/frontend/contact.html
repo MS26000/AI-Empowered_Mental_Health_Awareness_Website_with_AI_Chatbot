@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* Full background image */
+body {
+  font-family: 'Nunito', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: url('images/contact.webp') no-repeat center center fixed;
+  background-size: cover;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Overlay for readability */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: -1;
+}
+
+/* Sticky top navigation */
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: rgba(0,0,0,0.7);
+  padding: 15px 0;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.top-nav a {
+  color: #ffd700;
+  margin: 0 15px;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.3s;
+}
+
+.top-nav a:hover {
+  color: #ffffff;
+}
+
+header {
+  text-align: center;
+  padding: 50px 20px 20px;
+  color: #fff;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 3rem;
+}
+
+header p {
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
+.container {
+  max-width: 600px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.contact-card {
+  background: rgba(255,255,255,0.1);
+  border-radius: 15px;
+  padding: 30px 20px;
+  margin-bottom: 30px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+}
+
+.contact-card i {
+  font-size: 2.5rem;
+  color: #ffd700;
+  margin-bottom: 15px;
+}
+
+.contact-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #ffd700;
+}
+
+.contact-card p a {
+  color: #fff;
+  font-size: 1.1rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.contact-card p a:hover {
+  text-decoration: underline;
+}
+
+/* Thank You Section */
+.thankyou {
+  text-align: center;
+  padding: 40px 20px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 15px;
+  margin-top: 40px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease;
+}
+
+.thankyou:hover {
+  transform: scale(1.02);
+}
+
+.thankyou h2 {
+  margin-bottom: 15px;
+  font-size: 2rem;
+  color: #ffd700;
+}
+
+.thankyou p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #fff;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  font-weight: bold;
+  margin-top: auto;
+  color: #fff;
+}
+
+footer a {
+  color: #ffd700;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media(max-width:600px){
+  .top-nav a {
+    display: block;
+    margin: 8px 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Sticky Navigation -->
+<div class="top-nav">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="services.html">Services</a>
+  <a href="therapist.html">Find Therapist</a>
+  <a href="testimonials.html">Testimonials</a>
+  <a href="contact.html">Contact</a>
+  <a href="login.html" id="login-link" style="display:none;">Login</a>
+  <a href="signup.html" id="signup-link" style="display:none;">Sign Up</a>
+  <a href="#" id="logout-link" style="display:none;">Logout</a>
+</div>
+
+<header>
+  <h1>AI-Empowered Mental Health Awareness Website with AI Chatbot - Contact</h1>
+  <p> I'm here to support your mental wellness 🌿</p>
+</header>
+
+<main class="container">
+  <!-- Contact Cards -->
+  <div class="contact-card">
+    <i class="fa-solid fa-phone"></i>
+    <h3>Phone</h3>
+    <p><a href="tel:+92310-4445566">+92 310 4445566</a></p>
+  </div>
+
+  <div class="contact-card">
+    <i class="fa-solid fa-envelope"></i>
+    <h3>Email</h3>
+    <p><a href="mailto:saba25@gmail.com">saba25@gmail.com</a></p>
+  </div>
+
+
+  <!-- Thank You Section -->
+  <div class="thankyou">
+    <h2>Thank You for Reaching Out!</h2>
+    <p>Thank you for reaching out to AI-Empowered Mental Health Awareness Website with AI Chatbot. I truly value your interest in mental wellness, and I’ll respond to your queries as soon as possible. Stay positive and take care! 🌿</p>
+  </div>
+</main>
+
+<script src="auth.js"></script>
+<script>
+// ---- Navbar login/logout handling ----
+window.addEventListener('DOMContentLoaded', () => {
+  const user = window.MindAuth.getUser();
+  if(user){
+    document.getElementById('login-link').style.display = 'none';
+    document.getElementById('signup-link').style.display = 'none';
+    document.getElementById('logout-link').style.display = 'inline';
+  } else {
+    document.getElementById('login-link').style.display = 'inline';
+    document.getElementById('signup-link').style.display = 'inline';
+    document.getElementById('logout-link').style.display = 'none';
+  }
+
+  // Logout
+  document.getElementById('logout-link').addEventListener('click', (e)=>{
+    e.preventDefault();
+    window.MindAuth.logout();
+    location.reload();
+  });
+});
+
+
+</script>
+
+</body>
+</html>
